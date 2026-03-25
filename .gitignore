@@ -1,0 +1,19 @@
+# Ignore raw data files
+train.csv
+test.csv
+supervised-twitter-politics.csv
+supervised-twitter.csv
+news-sentiment.csv
+mesoc.csv
+annotated_bicodemix_publicsa_v2.csv
+*.json
+
+# Ignore virtual environment
+.venv/
+
+# Ignore PyCharm project settings
+.idea/
+
+# Ignore large model checkpoints if needed
+*.bin
+*.pt
