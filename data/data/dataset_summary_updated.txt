@@ -1,0 +1,11 @@
+Dataset Summary
+Total samples: 283056
+Train/Test split sizes:
+Train: 226444
+Test: 56612
+Unique labels after normalization:
+[0 2 1]
+Label counts:
+Neutral: 103375
+Negative: 96224
+Positive: 83457

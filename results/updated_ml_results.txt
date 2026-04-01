@@ -1,0 +1,13 @@
+Machine Learning Results
+{'model': 'Logistic Regression (TF-IDF)', 'accuracy': 0.8062954850561719, 'precision': 0.8061171069471671, 'recall': 0.8062954850561719, 'f1': 0.8061731460329143}
+
+Class-wise report:
+              precision    recall  f1-score   support
+
+    Positive       0.76      0.76      0.76     16692
+    Negative       0.81      0.80      0.81     19245
+     Neutral       0.84      0.85      0.84     20675
+
+    accuracy                           0.81     56612
+   macro avg       0.80      0.80      0.80     56612
+weighted avg       0.81      0.81      0.81     56612

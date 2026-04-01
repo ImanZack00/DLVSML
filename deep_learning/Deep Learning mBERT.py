@@ -7,14 +7,14 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # --- Load train/test (your paths) ---
-train_df = pd.read_csv(r"C:\Users\User\PycharmProjects\DLVSML(DL)\data\data\train.csv")
-test_df = pd.read_csv(r"C:\Users\User\PycharmProjects\DLVSML(DL)\data\data\test.csv")
+train_df = pd.read_csv(r"C:\Users\User\PycharmProjects\DLVSML(DL)\data\updatedtrain.csv")
+test_df = pd.read_csv(r"C:\Users\User\PycharmProjects\DLVSML(DL)\data\updatedtest.csv")
 
 train_texts, train_labels = train_df["text"].astype(str).tolist(), train_df["label"].tolist()
 test_texts, test_labels = test_df["text"].astype(str).tolist(), test_df["label"].tolist()
 
 # --- Load tokenizer directly from Hugging Face online ---
-tokenizer = BertTokenizer.from_pretrained("google-bert/bert-base-multilingual-cased")
+tokenizer = BertTokenizer.from_pretrained("bert-base-multilingual-cased")   # ✅ corrected model name
 
 train_encodings = tokenizer(train_texts, truncation=True, padding=True, max_length=128)
 test_encodings = tokenizer(test_texts, truncation=True, padding=True, max_length=128)
@@ -34,7 +34,8 @@ train_dataset = SentimentDataset(train_encodings, train_labels)
 test_dataset = SentimentDataset(test_encodings, test_labels)
 
 # --- Load model directly from Hugging Face online ---
-model = BertForSequenceClassification.from_pretrained("google-bert/bert-base-multilingual-cased",
+model = BertForSequenceClassification.from_pretrained(
+    "bert-base-multilingual-cased",
     num_labels=3
 )
 
@@ -45,22 +46,26 @@ def compute_metrics(pred):
     precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average='weighted')
     return {'accuracy': acc, 'precision': precision, 'recall': recall, 'f1': f1}
 
-# --- CPU-safe Training Arguments ---
-BATCH_SIZE = 4
+# --- Training Arguments (updated for better performance) ---
+BATCH_SIZE = 16   # larger batch size if GPU memory allows
 
 training_args = TrainingArguments(
     output_dir=os.path.join(BASE_DIR, "results"),
-    eval_strategy="epoch",             # correct arg name is evaluation_strategy
+    eval_strategy="epoch",       # ✅ corrected keyword
+    save_strategy="epoch",             # save checkpoints each epoch
+    save_total_limit=3,                # keep last 3 checkpoints
+    load_best_model_at_end=True,       # reload best checkpoint
+    metric_for_best_model="f1",        # use F1 to decide best model
+    greater_is_better=True,
     per_device_train_batch_size=BATCH_SIZE,
     per_device_eval_batch_size=BATCH_SIZE,
-    gradient_accumulation_steps=4,           # simulates batch size 16
-    num_train_epochs=3,
+    num_train_epochs=10,               # more epochs for higher accuracy
+    learning_rate=3e-5,                # tuned LR
     weight_decay=0.01,
-    fp16=False,                              # disable mixed precision (CPU only)
-    logging_steps=50,
-    save_strategy="epoch",
-    save_total_limit=2,
-    load_best_model_at_end=True
+    fp16=True,                         # mixed precision for speed
+    logging_steps=100,
+    warmup_steps=1000,                 # warmup for stability
+    lr_scheduler_type="linear"         # linear decay scheduler
 )
 
 trainer = Trainer(
@@ -79,6 +84,7 @@ if os.path.isdir(checkpoint_dir) and any("checkpoint" in d for d in os.listdir(c
 else:
     trainer.train()
 
+# --- Evaluate and save results ---
 results = trainer.evaluate()
 print(results)
 
@@ -89,9 +95,9 @@ tokenizer.save_pretrained(os.path.join(BASE_DIR, "models", "sentiment_model"))
 
 # --- Save results to text file ---
 os.makedirs(os.path.join(BASE_DIR, "results"), exist_ok=True)
-with open(os.path.join(BASE_DIR, "results", "training_results.txt"), "w", encoding="utf-8") as f:
+with open(os.path.join(BASE_DIR, "results", "updated_training_results.txt"), "w", encoding="utf-8") as f:
     f.write("Training Results\n")
     for k,v in results.items():
         f.write(f"{k}: {v}\n")
 
-print("Training complete. Model saved to ./models/sentiment_model and results written to results/training_results.txt")
+print("✅ Training complete. Best model saved to ./models/sentiment_model and results written to results/updated_training_results.txt")
