@@ -6,12 +6,12 @@ The goal is to compare traditional Machine Learning with transformer-based model
 
 ## Datasets
 We combined multiple publicly available datasets:
-- **Kaggle JSON Sentiment Data** (Positive/Negative tweets) https://www.kaggle.com/datasets/ilhamfp31/malaysia-twitter-sentiment
-- **MESocSentiment Corpus** (Malay-English code-switched tweets) https://github.com/afifahms/MESocSentiment
-- **News Sentiment Dataset** (Malay political/news texts) https://github.com/malaysia-ai/malaysian-dataset
-- **Supervised Twitter Dataset** (Manually annotated tweets) https://github.com/malaysia-ai/malaysian-dataset
-- **Supervised Twitter Politics Dataset** (Political tweets) https://github.com/malaysia-ai/malaysian-dataset
-- **Annotated Bicodemix Dataset** (Malay-English bilingual sentiment + sarcasm labels) https://github.com/suhayryz/public_security_sa
+- **Kaggle JSON Sentiment Data** https://www.kaggle.com/datasets/ilhamfp31/malaysia-
+- **Kaggle The dUCk Tweets** https://www.kaggle.com/datasets/carlsonhoo/the-duck-tweets
+- **MESocSentiment Corpus** https://github.com/afifahms/MESocSentiment
+- **Covid Malaysia** https://github.com/sarahjuan/malaysia-tweets-with-sentiment-labels
+- **Semi-Supervised-Twitter** https://malaysian-dataset.readthedocs.io/en/latest/sentiment.html
+- **Annotated Bicodemix Dataset** https://github.com/suhayryz/public_security_sa
 
 All datasets were normalized into three sentiment classes:
 - `0 = Positive`
